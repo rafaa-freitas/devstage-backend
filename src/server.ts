@@ -1,6 +1,7 @@
 import { fastifyCors } from '@fastify/cors';
 import { fastifySwagger } from '@fastify/swagger';
 import { fastifySwaggerUi } from '@fastify/swagger-ui';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { fastify } from 'fastify';
 import {
   type ZodTypeProvider,
@@ -8,6 +9,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
+import { db } from './drizzle/client';
 import { env } from './env';
 import { accessInviteLinkRoute } from './routes/access-invite-link-route';
 import { getRankingRoute } from './routes/get-ranking-route';
@@ -32,6 +34,16 @@ app.register(fastifySwagger, {
   },
   transform: jsonSchemaTransform,
 });
+
+migrate(db, { migrationsFolder: './src/db/migrations' })
+  .then(() => {
+    console.log('Migrations complete!');
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.error('Migrations failed!', err);
+    process.exit(1);
+  });
 
 app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
