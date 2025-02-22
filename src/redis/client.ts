@@ -1,4 +1,5 @@
-import { Redis } from 'ioredis'
-import { env } from '../env'
+import { Redis } from 'ioredis';
+import { env } from '../env';
 
-export const redis = new Redis(env.REDIS_URL)
+// biome-ignore lint/style/useTemplate: <explanation>
+export const redis = new Redis(env.REDIS_URL + '?family=0');
