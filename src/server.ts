@@ -35,7 +35,7 @@ app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 });
 
-migrate(db, { migrationsFolder: './src/db/migrations' })
+migrate(db, { migrationsFolder: './src/drizzle/migrations' })
   .then(() => {
     console.log('Migrations complete!');
     process.exit(0);
